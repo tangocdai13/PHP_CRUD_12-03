@@ -1,4 +1,0 @@
-<?php
-/*
- * Danh sach Users
- * */
