@@ -5,6 +5,13 @@
 if (!defined('_INCODE')) die('Access Deined...');
 $data = ['pageTitle' => 'Đăng nhập hệ thống'];
 layout('header-login', $data);
+
+//$session = setSession('login', 'Unicode');
+//var_dump($session);
+//setFlashData('msg', 'Dang nhap thanh cong');
+//echo getFlashData('msg');
+//setFlashData('msg_test', 'Dang nhap thanh cong');
+echo getFlashData('msg_test');
 ?>
 
 <div class="row">
