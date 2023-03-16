@@ -11,7 +11,11 @@ layout('header-login', $data);
 //setFlashData('msg', 'Dang nhap thanh cong');
 //echo getFlashData('msg');
 //setFlashData('msg_test', 'Dang nhap thanh cong');
-echo getFlashData('msg_test');
+//echo getFlashData('msg_test');
+$send = sendMail('tangocdai13@gmail.com', 'Test Email', 'Noi dung email test abc');
+if ($send) {
+    echo 'Gui email thanh cong!!!';
+}
 ?>
 
 <div class="row">
