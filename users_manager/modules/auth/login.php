@@ -6,15 +6,13 @@ if (!defined('_INCODE')) die('Access Deined...');
 $data = ['pageTitle' => 'Đăng nhập hệ thống'];
 layout('header-login', $data);
 
-//$body = getBody();
-//if (isPost()){
-//    $body = getBody();
-//    echo '<pre>';
-//    print_r($body);
-//    echo '</pre>';
-//}
-$checkInt = isNumberInt(5, ['min_range'=>6, 'max_range'=>10]);
-var_dump($checkInt);
+$password = '123456';
+$passwordHash = password_hash($password, PASSWORD_DEFAULT);
+$passwordVerify = password_verify($password, $passwordHash);
+if ($passwordVerify) {
+    echo 'Xac thuc thanh cong';
+}
+echo $passwordHash;
 ?>
 
 <div class="row">
