@@ -9,15 +9,18 @@ layout('header-login', $data);
 $password = '123456';
 $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 $passwordVerify = password_verify($password, $passwordHash);
-if ($passwordVerify) {
-    echo 'Xac thuc thanh cong';
-}
-echo $passwordHash;
+//if ($passwordVerify) {
+//    echo 'Xac thuc thanh cong';
+//}
+//echo $passwordHash;
+$msg = getFlashData('msg');
+$msg_type = getFlashData('msg_type');
 ?>
 
 <div class="row">
     <div class="col-6" style="margin: 20px auto;">
         <h3 class="text-center text-uppercase">Đăng nhập hệ thống</h3>
+        <?php msgFlash($msg, $msg_type); ?>
         <form action="" method="post">
             <div class="form-group">
                 <label for="">Email</label>
