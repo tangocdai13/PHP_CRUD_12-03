@@ -33,6 +33,7 @@ function sendMail($to, $subject, $content) {
 
         //Content
         $mail->isHTML(true);                                  //Set email format to HTML
+        $mail->CharSet = 'UTF-8';
         $mail->Subject = $subject;
         $mail->Body    = $content;
 //        $mail->AltBody = 'This is the body in plain text for non-HTML mail clients'; //mang yeu thi hien thi noi dung nay
@@ -133,4 +134,47 @@ function isNumberFloat($number, $range=[]) {
     }
 
     return $checkNumber;
+}
+
+//Kiểm tra số điện thoại
+function isPhone($phone) {
+    $checkFirstPhone = false;
+    if ($phone[0] == 0) {
+        $checkFirstPhone = true;
+        $phone = substr($phone, 1);
+    }
+    $checkPhone = false;
+    if (isNumberInt($phone) && strlen($phone) == 9) {
+        $checkPhone = true;
+    }
+
+    if ($checkFirstPhone && $checkPhone) {
+        return true;
+    }
+
+    return false;
+}
+
+//Hàm tạo thông báo
+function msgFlash($msg, $type='success') {
+    if (!empty($msg)) {
+        echo '<div class="alert alert-'.$type.'">';
+        echo $msg;
+        echo '</div>';
+    }
+}
+
+function redirect($path='') {
+    header("location: $path");
+    exit();
+}
+
+//Hàm thông báo lỗi
+function form_error($fieldName, $errors, $beforeHtml='', $afterHtml='') {
+    return (!empty($errors[$fieldName])) ? $beforeHtml.reset($errors[$fieldName]).$afterHtml : false;
+}
+
+//Hàm hiển thị lại dữ liệu
+function old($oldData, $fieldName, $default=false) {
+    return (!empty($oldData[$fieldName])) ? $oldData[$fieldName] : $default;
 }
