@@ -6,13 +6,66 @@ if (!defined('_INCODE')) die('Access Deined...');
 $data = ['pageTitle' => 'Đăng nhập hệ thống'];
 layout('header-login', $data);
 
-$password = '123456';
-$passwordHash = password_hash($password, PASSWORD_DEFAULT);
-$passwordVerify = password_verify($password, $passwordHash);
-//if ($passwordVerify) {
-//    echo 'Xac thuc thanh cong';
-//}
-//echo $passwordHash;
+//Kiểm tra trạng thái đăng nhập
+if (isLogin()) {
+    redirect('?module=users');
+}
+//Xử lí đăng nhập
+if (isPost()) {
+    $body = getBody();
+    if (!empty(trim($body['email'])) && !empty(trim($body['password']))) {
+        //Kiểm tra đăng nhập
+        $email = $body['email'];
+        $password = $body['password'];
+
+        //Truy vấn lấy thông tin user theo mail
+        $userQuery = firstRaw("SELECT id, password FROM users WHERE email='$email'");
+        if (!empty($userQuery)) {
+            $passwordHash = $userQuery['password'];
+            $userId = $userQuery['id'];
+            if (password_verify($password, $passwordHash)) {
+                //Tạo Token Login
+                $tokenLogin = sha1(uniqid().time());
+
+                //Insert dữ liệu vào bảng login_token
+                $dataToken = [
+                    'userId' => $userId,
+                    'token' => $tokenLogin,
+                    'createAt' => date('Y-m-d H:i:s')
+                ];
+
+                $insertTokenStatus = insert('login_token', $dataToken);
+                if ($insertTokenStatus) {
+                    //Insert thanh cong
+
+                    //Lưu loginToken vào session
+                    setSession('loginToken', $tokenLogin);
+
+                    //Chuyển hướng qua trang quản lý users
+                    redirect('?module=users');
+                }else {
+                    setFlashData('msg', 'Lỗi hệ thống, bạn không thể đăng nhập ngay lúc này!');
+                    setFlashData('msg_type','danger');
+//                    redirect('?module=auth&action=login');
+                }
+            }else {
+                setFlashData('msg', 'Mật khẩu không chính xác');
+                setFlashData('msg_type','danger');
+//                redirect('?module=auth&action=login');
+            }
+        }else {
+            setFlashData('msg', 'Email không tồn tại trên hệ thống');
+            setFlashData('msg_type','danger');
+//            redirect('?module=auth&action=login');
+        }
+    }else {
+        setFlashData('msg','Vui lòng nhập email và mật khẩu');
+        setFlashData('msg_type','danger');
+//        redirect('?module=auth&action=login');
+    }
+
+    redirect('?module=auth&action=login');
+}
 $msg = getFlashData('msg');
 $msg_type = getFlashData('msg_type');
 ?>
